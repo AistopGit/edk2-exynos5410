@@ -57,7 +57,7 @@ typedef struct {
           0x4bf1704c, 0x03f4, 0x46d5, \
           { 0xbc, 0xa6, 0x82, 0xfa, 0x58, 0x0b, 0xad, 0xfd } \
           }
-
+/*
 STATIC PLATFORM_USB_DEV mUsbHubPort = {
   //
   // VENDOR_DEVICE_PATH DwUsbHostDxe
@@ -91,7 +91,7 @@ STATIC PLATFORM_USB_DEV mUsbHubPort = {
     DP_NODE_LEN (EFI_DEVICE_PATH_PROTOCOL)
   }
 };
-
+*/
 #define SERIAL_DXE_FILE_GUID { \
           0xD3987D4B, 0x971A, 0x435F, \
           { 0x8C, 0xAF, 0x49, 0x67, 0xEB, 0x62, 0x72, 0x41 } \

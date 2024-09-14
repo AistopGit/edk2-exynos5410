@@ -1,5 +1,5 @@
-ARCH              = arm64
-TARGET            = aarch64-linux-gnu
+ARCH              = arm
+TARGET            = arm-linux-gnueabihf
 CROSS_COMPILE     = $(TARGET)-
 CC                = $(CROSS_COMPILE)gcc
 OBJCOPY           = $(CROSS_COMPILE)objcopy

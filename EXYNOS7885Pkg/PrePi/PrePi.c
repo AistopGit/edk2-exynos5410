@@ -28,13 +28,13 @@ VOID UartInit(VOID)
 {
   SerialPortInitialize();
 
-  DEBUG((EFI_D_INFO, "\nPEdeka on sexynos (AArch64)\n"));
+  DEBUG((EFI_D_INFO, "\nPEdeka on sexynos (ARM)\n"));
   DEBUG(
       (EFI_D_INFO, "Firmware version %s built %a %a\n\n",
        (CHAR16 *)PcdGetPtr(PcdFirmwareVersionString), __TIME__, __DATE__));
 }
 
-VOID Main (IN  UINT64  StartTimeStamp)
+VOID Main (IN  UINT32  StartTimeStamp)
 {
   EFI_HOB_HANDOFF_INFO_TABLE  *HobList;
   EFI_STATUS                  Status;
@@ -46,25 +46,15 @@ VOID Main (IN  UINT64  StartTimeStamp)
   UINTN StacksBase     = 0;
   UINTN StacksSize     = 0;
   
+  //decon thing
+  MmioWrite32 (0x14400070, 0x1281);
+  
   // Architecture-specific initialization
   // Enable Floating Point
   ArmEnableVFP();
 
   /* Enable program flow prediction, if supported */
   ArmEnableBranchPrediction();
-
-void setFBcolor(char* colors) {
-    char* base = (char*)0x0ec000000ull;
-    for (int i = 0; i < 0x00800000; i += 4) {
-        base[i] = colors[0];      // Blue component
-        base[i + 1] = colors[1];  // Green component
-        base[i + 2] = colors[2];  // Red component
-        base[i + 3] = 255;        // Full opacity
-    }
-}
-
-    char colors[3] = {0, 0, 0}; // Blue color (RGB format)
-    setFBcolor(colors);
 
   // Declare UEFI region
   MemoryBase     = FixedPcdGet32(PcdSystemMemoryBase);

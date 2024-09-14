@@ -192,7 +192,7 @@ DisplayBlt
   gBS->RestoreTPL (Tpl);
 
   // zhuowei: hack: flush the cache manually since my memory maps are still broken
-  WriteBackInvalidateDataCacheRange((void*)mDisplay.Mode->FrameBufferBase, 
+  WriteBackInvalidateDataCacheRange((VOID*)mDisplay.Mode->FrameBufferBase, 
     mDisplay.Mode->FrameBufferSize);
   // zhuowei: end hack
 
@@ -296,9 +296,9 @@ SimpleFbDxeInitialize
 
     // zhuowei: clear the screen to black
     // UEFI standard requires this, since text is white - see OvmfPkg/QemuVideoDxe/Gop.c
-    ZeroMem((void*)FrameBufferAddress, FrameBufferSize);
+    ZeroMem((VOID*)FrameBufferAddress, FrameBufferSize);
     // hack: clear cache
-    WriteBackInvalidateDataCacheRange((void*)FrameBufferAddress, FrameBufferSize);
+    WriteBackInvalidateDataCacheRange((VOID*)FrameBufferAddress, FrameBufferSize);
     // zhuowei: end
  
     /* Register handle */
