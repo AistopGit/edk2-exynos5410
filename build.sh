@@ -6,7 +6,6 @@ set -e
 ./build_bootshim.sh
 GCC5_ARM_PREFIX=arm-linux-gnueabihf- build -j$(nproc) -s -n 0 -a ARM -t GCC5 -p EXYNOS7885Pkg/Devices/a10.dsc
 cat BootShim/BootShim.bin workspace/Build/EXYNOS7885Pkg/DEBUG_GCC5/FV/EXYNOS7885PKG_UEFI.fd > workspace/UEFI
-#mkbootimg --kernel workspace/UEFI -o workspace/boot.img
 
 python3 mkbootimg.py \
   --kernel workspace/UEFI \

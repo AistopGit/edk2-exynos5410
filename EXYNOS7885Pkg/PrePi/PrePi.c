@@ -27,6 +27,8 @@ VOID EFIAPI ProcessLibraryConstructorList(VOID);
 VOID UartInit(VOID)
 {
   SerialPortInitialize();
+  
+  ZeroMem((VOID*)0x67000000, 0x7E9000);
 
   DEBUG((EFI_D_INFO, "\nPEdeka on sexynos (ARM)\n"));
   DEBUG(
@@ -66,8 +68,8 @@ VOID Main (IN  UINT32  StartTimeStamp)
 
   DEBUG(
       (EFI_D_INFO | EFI_D_LOAD,
-       "UEFI Memory Base = 0x%llx, Size = 0x%llx, Stack Base = 0x%llx, Stack "
-       "Size = 0x%llx\n",
+       "UEFI Memory Base = 0x%x, Size = 0x%x, Stack Base = 0x%x, Stack "
+       "Size = 0x%x\n",
        (VOID *)UefiMemoryBase, UefiMemorySize, (VOID *)StacksBase, StacksSize));
 
   // Declare the PI/UEFI memory region
@@ -106,13 +108,19 @@ VOID Main (IN  UINT32  StartTimeStamp)
 
   // Now, the HOB List has been initialized, we can register performance information
   //PERF_START (NULL, "PEI", NULL, StartTimeStamp);
+  
+  DEBUG((EFI_D_INFO, "nice im stuck here please reboot me\n"));
 
   // SEC phase needs to run library constructors by hand.
   ProcessLibraryConstructorList ();
+  
+  DEBUG((EFI_D_INFO, "not expected to reach here on exynos 5410\n"));
 
   // Assume the FV that contains the SEC (our code) also contains a compressed FV.
   Status = DecompressFirstFv ();
   ASSERT_EFI_ERROR (Status);
+  
+  DEBUG((EFI_D_INFO, "and guardian angels sang this strain\n"));
 
   // Load the DXE Core and transfer control to it
   Status = LoadDxeCoreFromFv (NULL, 0);

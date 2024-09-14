@@ -49,3 +49,6 @@
   gEXYNOS7885PkgTokenSpaceGuid.PcdMipiFrameBufferPixelBpp|32|UINT32|0x0000a403
   gEXYNOS7885PkgTokenSpaceGuid.PcdMipiFrameBufferVisibleWidth|1080|UINT32|0x0000a404
   gEXYNOS7885PkgTokenSpaceGuid.PcdMipiFrameBufferVisibleHeight|1920|UINT32|0x0000a405 
+  
+  # Timer
+  gArmTokenSpaceGuid.PcdArmArchTimerFreqInHz|0|UINT32|0x0000a700

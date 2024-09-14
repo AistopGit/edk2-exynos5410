@@ -25,13 +25,13 @@
 ################################################################################
 
 [FD.EXYNOS7885PKG_UEFI]
-BaseAddress   = 0x40954000|gArmTokenSpaceGuid.PcdFdBaseAddress  # The base address of the Firmware in NOR Flash.
-Size          = 0x00100000|gArmTokenSpaceGuid.PcdFdSize         # The size in bytes of the FLASH Device
+BaseAddress   = 0x50000000|gArmTokenSpaceGuid.PcdFdBaseAddress  # The base address of the Firmware in NOR Flash.
+Size          = 0x00200000|gArmTokenSpaceGuid.PcdFdSize         # The size in bytes of the FLASH Device
 ErasePolarity = 1
 
 # This one is tricky, it must be: BlockSize * NumBlocks = Size
 BlockSize     = 0x00001000
-NumBlocks     = 0x100
+NumBlocks     = 0x200
 
 ################################################################################
 #
@@ -54,7 +54,7 @@ NumBlocks     = 0x100
 # Implement the Linux kernel header layout so that the loader will identify
 # it as something bootable, and execute it with a FDT pointer in x0 or r2.
 #
-0x00000000|0x00100000
+0x00000000|0x00200000
 gArmTokenSpaceGuid.PcdFvBaseAddress|gArmTokenSpaceGuid.PcdFvSize
 FV = FVMAIN_COMPACT
 
