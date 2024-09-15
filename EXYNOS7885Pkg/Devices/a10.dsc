@@ -18,7 +18,7 @@
   gEmbeddedTokenSpaceGuid.PcdPrePiStackBase|0x50201000
   gEmbeddedTokenSpaceGuid.PcdPrePiStackSize|0x00040000      # 256K stack
   gEXYNOS7885PkgTokenSpaceGuid.PcdUefiMemPoolBase|0x50241000         # DXE Heap base address
-  gEXYNOS7885PkgTokenSpaceGuid.PcdUefiMemPoolSize|0x07000000         # UefiMemorySize, DXE heap size
+  gEXYNOS7885PkgTokenSpaceGuid.PcdUefiMemPoolSize|0x03C00000         # UefiMemorySize, DXE heap size
   gArmTokenSpaceGuid.PcdCpuVectorBaseAddress|0x50200000
 
   # Framebuffer (720x1280)

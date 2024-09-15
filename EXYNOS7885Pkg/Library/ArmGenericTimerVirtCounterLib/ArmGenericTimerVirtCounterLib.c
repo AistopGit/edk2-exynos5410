@@ -51,7 +51,7 @@ ArmGenericTimerSetTimerFreq (
   IN   UINTN  FreqInHz
   )
 {
-  ArmWriteCntFrq (FreqInHz);
+  //ArmWriteCntFrq (FreqInHz); // Broken here
 }
 
 UINTN
