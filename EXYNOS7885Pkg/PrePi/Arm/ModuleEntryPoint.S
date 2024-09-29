@@ -15,6 +15,9 @@
 
 ASM_FUNC (_ModuleEntryPoint)
 
+  // Disable MMU immediately (holy shit this was done by chatgpt and it fucking helped)
+  mcr  p15, 0, r0, c1, c0, 0 
+
   // Get MpId
   bl   ASM_PFX (ArmReadMpidr)
 

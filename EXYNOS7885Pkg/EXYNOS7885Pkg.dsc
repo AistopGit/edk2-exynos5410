@@ -234,6 +234,11 @@
   #
   EmbeddedPkg/Application/AndroidFastboot/AndroidFastbootApp.inf
 
+  #
+  # Multimedia Card Interface
+  #
+  #EXYNOS7885Pkg/Drivers/eMMCDxe/eMMCDxe.inf
+  #EXYNOS7885Pkg/Drivers/SDHCDxe/SDHCDxe.inf
 
   #
   # FAT filesystem + GPT/MBR partitioning
