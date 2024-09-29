@@ -5,7 +5,7 @@
   DSC_SPECIFICATION              = 0x00010019
   OUTPUT_DIRECTORY               = Build/$(PLATFORM_NAME)
   SUPPORTED_ARCHITECTURES        = ARM
-  BUILD_TARGETS                  = RELEASE
+  BUILD_TARGETS                  = DEBUG|RELEASE
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = EXYNOS7885Pkg/EXYNOS7885Pkg.fdf
 
@@ -14,7 +14,7 @@
 [PcdsFixedAtBuild.common]
   # System Memory (2 GB)
   gArmTokenSpaceGuid.PcdSystemMemoryBase|0x40000000
-  gArmTokenSpaceGuid.PcdSystemMemorySize|0x7FD00000
+  gArmTokenSpaceGuid.PcdSystemMemorySize|0x80000000
   gEmbeddedTokenSpaceGuid.PcdPrePiStackBase|0x50201000
   gEmbeddedTokenSpaceGuid.PcdPrePiStackSize|0x00040000      # 256K stack
   gEXYNOS7885PkgTokenSpaceGuid.PcdUefiMemPoolBase|0x50241000         # DXE Heap base address
