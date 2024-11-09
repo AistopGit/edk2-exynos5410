@@ -35,6 +35,7 @@
   gEFIDroidKeypadDeviceProtocolGuid = { 0xb27625b5, 0x0b6c, 0x4614, { 0xaa, 0x3c, 0x33, 0x13, 0xb5, 0x1d, 0x36, 0x46 } }
   gQcomClockProtocolGuid = { 0x4fcc91c2, 0x9c4f, 0x4e3c, { 0xa6, 0x73, 0xc6, 0xdf, 0x62, 0xe0, 0x41, 0xd5 } }
   gQcomBamProtocolGuid = { 0xacdd545a, 0xf1f6, 0x4272, { 0x81, 0xc5, 0x04, 0x93, 0xe3, 0x58, 0x05, 0x32 } }
+  gSamsungPlatformGpioProtocolGuid = { 0x82b4b2f7, 0x8c18, 0x4dbe, { 0xb7, 0x2e, 0x6a, 0x59, 0xd4, 0x23, 0x0c, 0x40 }}
 
 [PcdsFixedAtBuild.common]
   # Memory allocation
@@ -52,3 +53,16 @@
   
   # Timer
   gArmTokenSpaceGuid.PcdArmArchTimerFreqInHz|0|UINT32|0x0000a700
+  gEXYNOS7885PkgTokenSpaceGuid.PcdPWMTimerBase|0|UINT32|0x00000007
+  
+  # eMMC
+  gEXYNOS7885PkgTokenSpaceGuid.PcdCmuBase|0|UINT32|0x00000006
+  gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcCH0Base|0|UINT32|0x00000017
+  gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcBase|0|UINT32|0x0000000e
+  gEXYNOS7885PkgTokenSpaceGuid.PcdEmmcDMABufferBase|0|UINT32|0x40300000
+  
+  # GPIO
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart1Base|0|UINT32|0x0000000A
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart2Base|0|UINT32|0x0000000B
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart3Base|0|UINT32|0x0000000C
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart4Base|0|UINT32|0x0000000D

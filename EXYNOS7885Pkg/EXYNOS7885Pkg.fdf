@@ -127,6 +127,7 @@ READ_LOCK_STATUS   = TRUE
   #
   # GPIO
   #
+  INF EXYNOS7885Pkg/Drivers/Gpio/Gpio.inf
 
   #
   # Virtual Keyboard
@@ -159,6 +160,11 @@ READ_LOCK_STATUS   = TRUE
   # Fastboot
   #
   INF EmbeddedPkg/Application/AndroidFastboot/AndroidFastbootApp.inf
+  
+  #
+  # Multimedia Card Interface
+  #
+  INF EXYNOS7885Pkg/Drivers/eMMCDxe/eMMCDxe.inf
 
   #
   # FAT filesystem + GPT/MBR partitioning

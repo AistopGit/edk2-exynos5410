@@ -61,12 +61,12 @@ static ARM_MEMORY_REGION_DESCRIPTOR_EX gDeviceMemoryDescriptorEx[] = {
 */
 
     // Register regions
-    {"Peripherals",            0x00000000, 0x15000000, AddMem, MEM_RES, UNCACHEABLE, RtCode, NS_DEVICE},
-    //{"Gic Distributor",        0x10481000, 0x00001000, AddDev, MMAP_IO, UNCACHEABLE, MmIO,   NS_DEVICE},
-    //{"Gic Redistributors",     0x10482000, 0x00002000, AddDev, MMAP_IO, UNCACHEABLE, MmIO,   NS_DEVICE},
+    {"Peripherals",            0x00000000, 0x15000000, AddMem, MMAP_IO, UNCACHEABLE, MmIO, NS_DEVICE},
 
     // DDR regions
-    {"HLOS 0",                 0x40000000, 0x10000000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK},
+    {"HLOS 0",                 0x40000000, 0x00300000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK},
+    {"eMMC DMA",               0x40300000, 0x00100000, AddMem, MMAP_IO, UNCACHEABLE, MmIO,   NS_DEVICE},
+    {"HLOS 0.5",               0x40400000, 0x0FC00000, AddMem, SYS_MEM, SYS_MEM_CAP, Conv,   WRITE_BACK},
     {"UEFI FD",                0x50000000, 0x00200000, AddMem, SYS_MEM, SYS_MEM_CAP, BsCode, WRITE_BACK},
     {"CPU Vectors",            0x50200000, 0x00001000, AddMem, SYS_MEM, SYS_MEM_CAP, BsData, WRITE_BACK},
     {"UEFI Stack",             0x50201000, 0x00040000, AddMem, SYS_MEM, SYS_MEM_CAP, BsCode, WRITE_BACK},

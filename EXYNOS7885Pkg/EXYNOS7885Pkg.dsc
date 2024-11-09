@@ -131,8 +131,7 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdResetOnMemoryTypeInformationChange|FALSE
 
   gEmbeddedTokenSpaceGuid.PcdMetronomeTickPeriod|1000
-
-  #
+  
   #
   # Fastboot
   #
@@ -201,6 +200,11 @@
   MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
 
   MdeModulePkg/Universal/PCD/Dxe/Pcd.inf
+  
+  #
+  # GPIO
+  #
+  EXYNOS7885Pkg/Drivers/Gpio/Gpio.inf
 
   #
   # Virtual Keyboard
@@ -237,8 +241,8 @@
   #
   # Multimedia Card Interface
   #
-  #EXYNOS7885Pkg/Drivers/eMMCDxe/eMMCDxe.inf
-  #EXYNOS7885Pkg/Drivers/SDHCDxe/SDHCDxe.inf
+  EXYNOS7885Pkg/Drivers/eMMCDxe/eMMCDxe.inf
+  # EXYNOS7885Pkg/Drivers/SDHCDxe/SDHCDxe.inf
 
   #
   # FAT filesystem + GPT/MBR partitioning

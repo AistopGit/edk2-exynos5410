@@ -4,6 +4,7 @@
 #include <Library/CacheMaintenanceLib.h>
 #include <Library/HobLib.h>
 #include <Library/SerialPortLib.h>
+#include <Library/TimerLib.h>
 
 #include <Resources/font5x12.h>
 #include <Resources/FbColor.h>
@@ -165,6 +166,7 @@ paint:
 	return;
 
 newline:
+    MicroSecondDelay(1000);
 	m_Position.y += scale_factor;
 	m_Position.x = 0;
 	if (m_Position.y >= m_MaxPosition.y - scale_factor)

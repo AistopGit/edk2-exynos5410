@@ -27,3 +27,18 @@
   gEXYNOS7885PkgTokenSpaceGuid.PcdMipiFrameBufferHeight|1920
   gEXYNOS7885PkgTokenSpaceGuid.PcdMipiFrameBufferVisibleWidth|1080
   gEXYNOS7885PkgTokenSpaceGuid.PcdMipiFrameBufferVisibleHeight|1920
+
+  # Timer
+  gEXYNOS7885PkgTokenSpaceGuid.PcdPWMTimerBase|0x12DD0000
+
+  # eMMC PCDs
+  gEXYNOS7885PkgTokenSpaceGuid.PcdEmmcDMABufferBase|0x40300000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdCmuBase|0x10010000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcCH0Base|0x12200000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcBase|0x12220000
+
+  # GPIO
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart1Base|0x13400000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart2Base|0x14000000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart3Base|0x10D10000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart4Base|0x03860000
