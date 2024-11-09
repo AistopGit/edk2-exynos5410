@@ -48,8 +48,8 @@ VOID Main (IN  UINT32  StartTimeStamp)
   UINTN StacksBase     = 0;
   UINTN StacksSize     = 0;
   
-  //decon thing
-  MmioWrite32 (0x14400070, 0x1281);
+  //Enable decon
+  MmioWrite32 (0x14400000+0x70, 0x1281);
   
   // Architecture-specific initialization
   // Enable Floating Point

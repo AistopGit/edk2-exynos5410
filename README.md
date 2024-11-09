@@ -1,4 +1,4 @@
-Attempt to create a minimal EDK2 for Exynos 7885 devices
+Attempt to create a minimal EDK2 for Exynos 5410 devices
 
 ## Status
 Boots to UEFI Shell.
@@ -33,6 +33,8 @@ First run ./firstrun.sh
 Then, ./build.sh.
 
 This should make a boot.tar image to be flashed in ODIN, you may need to adjust.
+
+You can also take boot.img and flash it in TWRP.
 
 ## Porting this project to other Exynos SOCs
 
@@ -74,9 +76,11 @@ To get it, do the following command in TWRP:
 
 First we will need the memory base, to find it open up the iomem you dumped and look for the "System RAM" segment, specifically the first one that comes up, We will assume ```80000000-baafffff : System RAM``` as an example. You want to take note of the first part, which in this case is 80000000.
 
-Next we need the decon area, this is needed for framebuffer, in the iomem dump look for the "decon_f" segment, We will assume ```19050000-1905ffff : decon_f@0x19050000``` to be decon as an example, just as before take note of the first part, which in this case is 19050000
+Next we need the decon area, this is needed for framebuffer, in the iomem dump look for the "decon_f" segment, We will assume ```19050000-1905ffff : decon_f@0x19050000``` to be decon as an example, just as before take note of the first part, which in this case is 19050000.
+On Exynos 5410, this segment is called "exynos5-fb.1" (```14400000-1443ffff : exynos5-fb.1```).
 
 Now we're gonna decompile your DTB into a DTS (Device Tree Source), to do this do the following command ```dtc -I dtb -O dts -o devicetree.dts fdt```
+If your device does not have a DTB, you can try to search for a mainline one. Usually these ones have the required information.
 
 Now open devicetree.dts in a Text Editor, we're gonna look for the interrupt-controller node, again we will assume the interrupt-controller here to be
 
@@ -131,24 +135,9 @@ You can now save and close the file.
 
 ### Correcting decon address
 
-Go to https://godbolt.org/ and before doing anything chabge the compiler on the right to ARM64 GCC 5.4.
-
-Then in the left paste
-
-```
-void enableDecon()
-{
-	*(int*) (0x(decon_f noted from before) + 0x70) = 0x1281;
-}
-```
-
-The assembly you'll want is in the middle.
-
-
-Go to EXYNOS7885Pkg/Library
-/EXYNOS7885PkgLib and open up "EXYNOS7885PkgHelper.S"
-
-Replace the ```enableDecon:``` function with the one you got from the online compiler (except for the last ret) then close and save the file.
+Open EXYNOS7885Pkg/PrePi/PrePi.c.
+Find this line of code: ```MmioWrite32 (0x14400000+0x70, 0x1281);```.
+Replace the first address (```0x14400000```) with the address you've noted earlier.
 
 ### Editing the build script
 
@@ -176,6 +165,12 @@ If you made it this far, congratulations but you're here to get the shell fullsc
 # Credits
 
 SimpleFbDxe screen driver is from imbushuo's [Lumia950XLPkg](https://github.com/WOA-Project/Lumia950XLPkg).
+
+halal-beef for the help with MMU
+
+[SamsungPlatformPkg](https://github.com/idaviden/kaikidan/tree/linaro-release/SamsungPlatformPkg) for eMMCDxe, TimerDxe, GPIO support
+
+sonic011gamer/snaccy for edk2-exynos7885
 
 Zhuowei for making edk2-pixel3
 
