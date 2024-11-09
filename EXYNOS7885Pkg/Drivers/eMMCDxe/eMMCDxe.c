@@ -128,7 +128,6 @@ MSHC_SendCmd (
   int cmd_flags = 0;
   int timeout=0;
   UINT32 SdMmcBaseAddr;
-  //UINT32 MSHCRintStatus=0;
 
   DEBUG ((EFI_D_INFO, "CMD = %d\n", (Cmd&0x3F)));
 
@@ -147,31 +146,15 @@ MSHC_SendCmd (
     	MicroSecondDelay(1);
     }  
 
-    // 2. Check if Raw interrupt is command done 
-    /*MSHCRintStatus = MmioRead32(SdMmcBaseAddr + MSHCI_RINTSTS);
-    if ((MSHCRintStatus & (INTMSK_CDONE|INTMSK_ACD)) == 0) 
-    {
-        DEBUG ((EFI_D_ERROR, "MSHC::MSHC_SendCmd interrupt error : INT = %x\n", MmioRead32(SdMmcBaseAddr + MSHCI_RINTSTS)));
-    }  */
-
     // 3. Clear Raw interrupt 
     MmioWrite32 ((SdMmcBaseAddr + MSHCI_RINTSTS), INTMSK_ALL);
-
-    // 4. prepare data 
-    //mshci_reset_fifo();
   
-    //5. Set command argument register
+    // 4. Set command argument register
     MmioWrite32 ((SdMmcBaseAddr + MSHCI_CMDARG), CmdArgument);
 
-    // 6. transfer data
+    // 5. transfer data (unsupported)
 
-    //Enable interrupt enable events to occur
-    // EVT1 do not need interrupt mask, use Raw interrupt 
-    //MmioWrite32 ((SdMmcBaseAddr + MSHCI_INTMSK), CmdInterruptEnableVal);
-
-    // 7. trasfer data
-  
-    //8. Send a command
+    // 6. Send a command
     cmd_flags = (Cmd & 0x3F);
     if(Cmd & (RSPTYP48 | RSPTYP48B | RSPTYP136))
     {
@@ -183,14 +166,11 @@ MSHC_SendCmd (
     if((Cmd==CMD17)|(Cmd==CMD18)|(Cmd==CMD8))
     {
         cmd_flags |= CMD_DATA_EXP_BIT;
-        //DEBUG ((EFI_D_ERROR, "MSHC::MSHC_SendCmd Read\n"));
     }
 
     if((Cmd==CMD24)|(Cmd==CMD25))
     {
         cmd_flags |= CMD_DATA_EXP_BIT | CMD_RW_BIT;
-        //DEBUG ((EFI_D_ERROR, "MSHC::MSHC_SendCmd Write\n"));
-
     }
 
     if (Cmd & ENCMDCRC)
@@ -198,13 +178,13 @@ MSHC_SendCmd (
         cmd_flags |= CMD_CHECK_CRC_BIT;
     }
     cmd_flags |= (CMD_STRT_BIT | CMD_USE_HOLD_REG | CMD_WAIT_PRV_DAT_BIT|CMD_SENT_AUTO_STOP_BIT);
-    //cmd_flags |= (CMD_STRT_BIT | CMD_USE_HOLD_REG | CMD_WAIT_PRV_DAT_BIT);
+
     DEBUG ((EFI_D_INFO, "CMD flag = 0x%x\n", cmd_flags));
     MmioWrite32 ((SdMmcBaseAddr + MSHCI_CMD), cmd_flags);
     MicroSecondDelay(1);
 
-  //9. Check for the Raw interrupt
-  //wait for command complete by busy waiting. 
+  // 7. Check for the Raw interrupt
+  // wait for command complete by busy waiting. 
     for (RetryCount; RetryCount<MAX_RETRY_COUNT; RetryCount++) 
     {
         MmcStatus = MmioRead32(SdMmcBaseAddr + MSHCI_RINTSTS);
@@ -265,14 +245,11 @@ EFI_STATUS MSHC_BOOT_Partition(UINT32 bootsize, UINT32 rpmbsize)
     CmdArgument = 0xcbaea7;
     Status = MSHC_SendCmd (CMD62, CMD62_INT_EN, CmdArgument);
 
-    //BootSize = ((bootsize*1024)/128);
     BootSize = (bootsize*2);
     
     /* Arg: boot partition size */
     CmdArgument = BootSize;
     Status = MSHC_SendCmd (CMD62, CMD62_INT_EN, CmdArgument);
-
-    //RPMBSize = ((rpmbsize*1024)/128);
     RPMBSize = (rpmbsize*2);
 
     /* Arg: RPMB partition size */
@@ -342,9 +319,6 @@ VOID GetEXTCSD()
     gCardInfo.NumBlocks = 0;
     gCardInfo.TotalNumBlocks = 30801920;
 
-    DEBUG ((EFI_D_ERROR, "MSHC:: default block number : 0x1D4C000"));
-    UpdateMSHCClkFrequency (MSHC_CLK_50M);
-
     UINTN cmdarg = 0;  
     EFI_STATUS Status = EFI_SUCCESS;
 
@@ -361,23 +335,16 @@ VOID GetEXTCSD()
     cmdarg = 0;
     Status = MSHC_SendCmd (CMD8, CMD8_INT_EN, cmdarg);
 
-    gCardInfo.BlockSize = BLEN_512BYTES;
     
     if (!EFI_ERROR(Status)) 
     {
         DEBUG ((EFI_D_INFO, "MSHC::EXT CSD \n"));
         PrepareTransfer(&Ext_csd[0], 1, READ);
         MSHC_ReadDMA(&Ext_csd[0], 1);
-        //MSHC_ReadFIFO(EXT_CSD_SIZE, &Ext_csd[0]);
+        // EXT CSD would be full of zeroes anyway, the reason is unknown
         gCardInfo.NumBlocks = Ext_csd[EXT_CSD_SEC_CNT/4];
         gCardInfo.Extcsd.boot_size_multi = Ext_csd[BOOT_SIZE_MULTI/4];
         gCardInfo.Extcsd.boot_size_multi = (gCardInfo.Extcsd.boot_size_multi>>16)&0xff;
-        MicroSecondDelay(5000);
-        
-        DEBUG ((EFI_D_INFO, "MSHC::num blocks %d\n", gCardInfo.NumBlocks));         
-        DEBUG ((1, "MSHC::eMMC Size:%dMB\n", (gCardInfo.NumBlocks/2048)));         
-        DEBUG ((1, "MSHC::Boot partition Size:%dMB\n", ((gCardInfo.TotalNumBlocks-gCardInfo.NumBlocks)/2048)));         
-        DEBUG ((EFI_D_INFO, "MSHC::Ext CSD boot block %d\n", (gCardInfo.Extcsd.boot_size_multi)));
 
         UpdateMSHCClkFrequency (MSHC_CLK_50M);
     }
@@ -397,10 +364,7 @@ PerformCardIdenfication (
 {
   EFI_STATUS Status;
   UINTN      CmdArgument = 0;
-  //UINTN      Response = 0;
-  //UINTN      RetryCount = 0;
   UINTN	   TempRes0,TempRes1,TempRes2,TempRes3;
-  //BOOLEAN    SDCmd8Supported = FALSE;
   UINT32 SdMmcBaseAddr;
   int timeout = MAX_RETRY_COUNT;  
 
@@ -467,7 +431,7 @@ PerformCardIdenfication (
   gCardInfo.RCA = (MmioRead32 ((SdMmcBaseAddr + MSHCI_RESP0)) >> 16);
   DEBUG ((EFI_D_INFO, "CMD3 response: RCA %x\n", gCardInfo.RCA));
 
-	gBS->Stall(1000);		//Need Debug by wprkfgur
+	gBS->Stall(1000);
 
   return EFI_SUCCESS;
 }
@@ -515,8 +479,6 @@ PerformCardConfiguration (
   UINTN      CmdArgument = 0;
   EFI_STATUS Status;
   UINT32 SdMmcBaseAddr;
-  //UINTN FifoCount = 0;
-  //UINTN Count=0;
   UINT32 OMval;
 
   SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);
@@ -532,7 +494,6 @@ PerformCardConfiguration (
   } 
 
       //Send CMD16 to set the block length
-      //CmdArgument = gCardInfo.BlockSize;
       CmdArgument = BLEN_512BYTES;
       Status = MSHC_SendCmd (CMD16, CMD16_INT_EN, CmdArgument);
       if (EFI_ERROR(Status)) {
@@ -560,8 +521,6 @@ PerformCardConfiguration (
         gCardInfo.NumBlocks = 30588928;
     }
     
-        // set device into 4-bit data bus mode
-        //Status = MSHC_SendCmd (ACMD6, ACMD6_INT_EN, 0x2);
         // set device into 8-bit data bus mode
         CmdArgument = (MMC_SWITCH_MODE_WRITE_BYTE << 24) |
                             (EXT_CSD_BUS_WIDTH <<16) |
@@ -705,7 +664,7 @@ TransferBlock (
   UINTN      CmdArgument = 0;
 
   // 1. FIFO reset
-  // MSHC_SendCmd do the fifo reset
+  // MSHC_SendCmd does the fifo reset
 
   // 2. prepare transfer
   
@@ -788,13 +747,8 @@ DetectCard (
   )
 {
   EFI_STATUS    Status;
-  //UINT32     SdMmcBaseAddr;
 
-  //DEBUG ((EFI_D_INFO, "===================================\n"));
   DEBUG ((EFI_D_INFO, "===MSHC: Version %a ===\n", DateInformation));
-  //DEBUG ((EFI_D_INFO, "===================================\n"));
-
-  //SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);
 
   if (!CardPresent ()) {
     return EFI_NO_MEDIA;
@@ -806,15 +760,6 @@ DetectCard (
     DEBUG ((EFI_D_ERROR, "Initialize MMC host controller fails. Status: %x\n", Status));
     return Status;
   }
-
-    // EVT1 InitializeSDHC do the SW Reset
-    //Soft reset for all.
-    //MmioWrite32((SdMmcBaseAddr + SDHC_SWRST_OFFSET), SRA);
-    //gBS->Stall(1000);
-    //while ((MmioRead32 ((SdMmcBaseAddr + SDHC_SWRST_OFFSET)) & SRA) != 0x0);
-
-  //Set the clock frequency to 400KHz.
-  //UpdateMSHCClkFrequency (MSHC_CLK_400);
 
   //Set the clock frequency to 25MHz.
   UpdateMSHCClkFrequency (MSHC_CLK_25M);
@@ -840,7 +785,6 @@ DetectCard (
 
   //Patch the Media structure.
   gSDMMCMedia.LastBlock    = (gCardInfo.NumBlocks - 1);
-  //gSDMMCMedia.BlockSize    = gCardInfo.BlockSize;
   gSDMMCMedia.BlockSize    = 512;
   gSDMMCMedia.ReadOnly     = 0;
   gSDMMCMedia.MediaPresent = TRUE;
@@ -868,7 +812,6 @@ SdReadWrite (
   UINTN      BytesToBeTranferedThisPass = 0;
   UINTN      BytesRemainingToBeTransfered=0;
   EFI_TPL    OldTpl;
-  //BOOLEAN    Update;
   UINT32     SdMmcBaseAddr;
 
   SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);
@@ -923,7 +866,6 @@ if(gCardInit)
         while (BytesRemainingToBeTransfered > 0) {
           // Turn OFF DMA path until it is debugged
            BytesToBeTranferedThisPass = (BytesRemainingToBeTransfered >= MAX_MSHC_TRANSFER_SIZE) ? MAX_MSHC_TRANSFER_SIZE : BytesRemainingToBeTransfered;
-          //BytesToBeTranferedThisPass   = This->Media->BlockSize;
       
           BlockCount = BytesToBeTranferedThisPass/This->Media->BlockSize;
           Status = TransferBlock (This, Lba, Buffer,BlockCount, OperationType);
@@ -944,7 +886,6 @@ if(gCardInit)
     {
           while (BytesRemainingToBeTransfered > 0) {
             // Turn OFF DMA path until it is debugged
-            // BytesToBeTranferedThisPass = (BytesToBeTranferedThisPass >= MAX_SDHC_TRANSFER_SIZE) ? MAX_SDHC_TRANSFER_SIZE : BytesRemainingToBeTransfered;
             BytesToBeTranferedThisPass   = This->Media->BlockSize;
         
             BlockCount = BytesToBeTranferedThisPass/This->Media->BlockSize;
@@ -1063,8 +1004,6 @@ EFI_STATUS
 #define EMMC_TEST_SIZE  (MAX_MSHC_TRANSFER_SIZE+1024)
 UINT32 bWrite[EMMC_TEST_SIZE];
 UINT32 bRead[EMMC_TEST_SIZE];
-//INTN EFIAPI  CompareMem (IN CONST VOID *DestinationBuffer, IN CONST VOID *SourceBuffer, IN UINTN Length) 
-//two buffers are identical, then 0 is returned. Otherwise, the value returned is the first mismatched byte 
 
 void MSHC_Test(  IN EFI_BLOCK_IO_PROTOCOL          *This)
 {
@@ -1082,8 +1021,7 @@ void MSHC_Test(  IN EFI_BLOCK_IO_PROTOCOL          *This)
 //multi 
    for(Count=100; Count<102; Count++)
    {
-       //Lba=n;
-       //DEBUG ((EFI_D_INFO, "MSHC::Read Write test : %d\n", Count));
+       DEBUG ((EFI_D_INFO, "MSHC::Read Write test : %d\n", Count));
        ZeroMem (&bRead[0], sizeof(bRead));
        DEBUG ((EFI_D_INFO, "ZR : 0x%x, 0x%x, 0x%x, 0x%x\n",
                bRead[0], bRead[1], bRead[2], bRead[3]));       
@@ -1128,7 +1066,6 @@ void FVB_Test(IN EFI_BLOCK_IO_PROTOCOL *This)
     UINT32 i;
     INTN ret;    
     UINTN Offset=FVB_Offset;
-    //EFI_FVB_ATTRIBUTES_2 *Attribute=NULL;
     UINTN blocksize=0, numofblocks=0;
    UINTN EraseStartBlock=10, EraseNumBlocks=5;  
    EFI_PHYSICAL_ADDRESS *Address=NULL;
@@ -1150,8 +1087,6 @@ void FVB_Test(IN EFI_BLOCK_IO_PROTOCOL *This)
     }
     ZeroMem (&FVB_Read[0], 512);
 
-    //DEBUG ((1, "FVB_Test FvbGetAttributes \n"));
-   //FvbGetAttributes(Fvbhandle, Attribute);
    FvbGetPhysicalAddress(Fvbhandle, Address);
    FvbGetBlockSize(Fvbhandle, 0, &blocksize,  &numofblocks);
    DEBUG ((1, "FVB_Test erase\n"));    
@@ -1209,19 +1144,6 @@ MSHCReadBlocks (
     			MediaId, (UINTN)Lba, BufferSize, Buffer));
 
   Status = SdReadWrite (This, (UINTN)Lba, Buffer, BufferSize, READ);
-
-#if 0
-#if FVB_TEST
-    FVB_Test(This);
-#else
-#if EMMC_TEST
-    MSHC_Test(This);
-#else    
-  //Perform Read operation.
-  Status = SdReadWrite (This, (UINTN)Lba, Buffer, BufferSize, READ);
-#endif   
-#endif //#if FVB_TEST
-#endif 
 
   return Status;
 
@@ -1290,31 +1212,6 @@ MSHCWriteBlocks (
 
   //Perform write operation.
   Status = SdReadWrite (This, (UINTN)Lba, Buffer, BufferSize, WRITE);
-
-
-#if 0
-#if EMMC_TEST
-    Count = (BufferSize >= MAX_MSHC_TRANSFER_SIZE) ? MAX_MSHC_TRANSFER_SIZE : BufferSize;    
-    DEBUG ((1, "\nMSHC::Read Write Test [0x%x] Start \n", Count));
-    ZeroMem (&bRead[0], sizeof(bRead));
-    CopyMem(&bWrite[0], (VOID *)Buffer, Count);
-    Status = SdReadWrite (This, (UINTN)Lba, &bRead[0], Count, READ);
-    DEBUG ((1, "W : 0x%x, 0x%x, 0x%x, 0x%x\n",
-           bWrite[7], bWrite[8], bWrite[9], bWrite[10]));
-
-    DEBUG ((1, "R : 0x%x, 0x%x, 0x%x, 0x%x\n",
-           bRead[7], bRead[8], bRead[9], bRead[10]));
-
-    ret = CompareMem(&bRead[0],&bWrite[0],Count);
-
-    if(ret==0)
-       DEBUG ((1, "MSHC::Read Write Test OK!!\n"));
-    else
-       DEBUG ((1, "MSHC::Read Write Test Failed -.-   bRead[%d]=0x%x  bWrite[%d]=0x%x \n", ret, bRead[ret], ret, bWrite[ret]));
-             
-#endif 
-#endif 
-
 
   return Status;
 

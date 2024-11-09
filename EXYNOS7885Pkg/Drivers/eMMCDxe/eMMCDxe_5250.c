@@ -27,7 +27,6 @@
 #include <Library/PcdLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/BaseMemoryLib.h>
-//#include <Library/UncachedMemoryAllocationLib.h>
 #include <Protocol/ExynosGpio.h>
 #include <Platform/ArmPlatform.h>
 #include <Platform/Exynos5250.h>
@@ -35,9 +34,6 @@
 
 
 #include "eMMCDxe.h"
-
-//#undef EFI_D_INFO
-//#define EFI_D_INFO 1
 
 #define DMA_UNCACHE_ALLOC 0
 #if DMA_UNCACHE_ALLOC
@@ -89,8 +85,6 @@ void MSHC_Set_DDR(int BusMode)
 {
 
     UINT32 clkphase;
-    //clkphase = 0x03030002;  //cmd response error at 50M RINT=0x46 error, RE and CD, RCRC
-    //clkphase = 0x03020001; //data read error at 50M SBE
     UINT32 SdMmcBaseAddr;
     SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);
 
@@ -117,8 +111,7 @@ void MSHC_5250_init(void)
     SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);    
     
     /* Power Enable Register */
-    MmioWrite32((SdMmcBaseAddr + MSHCI_PWREN), POWER_ENABLE);
-    //MSHC_Set_DDR(BUSMODE_DDR);     
+    MmioWrite32((SdMmcBaseAddr + MSHCI_PWREN), POWER_ENABLE);    
 
     MSHC_reset_all();
 
@@ -128,12 +121,7 @@ void MSHC_5250_init(void)
 	/* It clears all pending interrupts */
     MmioWrite32((SdMmcBaseAddr + MSHCI_RINTSTS), INTMSK_ALL);  
 	/* It dose not use Interrupt. Disable all */
-    MmioWrite32((SdMmcBaseAddr + MSHCI_INTMSK), 0);  
-
-    //UpdateMSHCClkFrequency(MSHC_CLK_400);
-
-	/* Set auto stop command */
-    //MmioWrite32((SdMmcBaseAddr + MSHCI_CTRL), (1<<10));     
+    MmioWrite32((SdMmcBaseAddr + MSHCI_INTMSK), 0);     
 
 	/* set debounce filter value*/
     MmioWrite32((SdMmcBaseAddr + MSHCI_DEBNCE), (0xfffff));     
@@ -164,7 +152,6 @@ InitializeMSHC (
   EFI_STATUS    Status;
   EXYNOS_GPIO *Gpio;
   UINT32 CmuBaseAddr;
-  //UINT32 SdMmcBaseAddr;
   UINT32 i, clock;
   volatile UINT32 ctl_val;
 
@@ -173,16 +160,12 @@ InitializeMSHC (
   ASSERT_EFI_ERROR(Status);
 
   CmuBaseAddr = PcdGet32(PcdCmuBase);
-  //SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);
-
-  //MmioWrite32((SdMmcBaseAddr + SDHC_SWRST_OFFSET), SRA); 
 
   // Set Clock Source for using MPLL
     ctl_val = MmioRead32((CmuBaseAddr + CLK_SRC_FSYS_OFFSET));
     ctl_val &= ~(0xf);
     ctl_val |= (0x6);
     MmioWrite32((CmuBaseAddr + CLK_SRC_FSYS_OFFSET), ctl_val);
-    //MmioAndThenOr32 ((CmuBaseAddr + CLK_SRC_FSYS_OFFSET), ~(0xF), (0x6));
 
     // CLK mask  
     ctl_val = MmioRead32((CmuBaseAddr + CLK_SRC_MASK_FSYS_OFFSET));
@@ -210,7 +193,6 @@ InitializeMSHC (
   // Set GPIO for using SD/MMC CH0 for eMMC
   Gpio->Set(Gpio,SD_0_CLK,GPIO_MODE_SPECIAL_FUNCTION_2);
   Gpio->Set(Gpio,SD_0_CMD,GPIO_MODE_SPECIAL_FUNCTION_2);
-  //Gpio->Set(Gpio,SD_0_CDn,GPIO_MODE_SPECIAL_FUNCTION_2);
 
   //Set CDn as HIGH
   Gpio->Set(Gpio,SD_0_CDn, GPIO_MODE_OUTPUT_1); 
@@ -325,14 +307,12 @@ UpdateMSHCClkFrequency (
  // Disable all clocks to not provide the clock to the card
 //(CONFIG_CPU_EXYNOS5250_EVT1) 
   MSHC_clock_onoff(CLK_DISABLE);
-  //MmioAnd32 ((SdMmcBaseAddr + CLKCON_OFFSET), ~(0xF));
 
   //Set new clock frequency.
     if (NewCLK == MSHC_CLK_400)
     {
         DEBUG ((EFI_D_INFO, "MSHC::CLK=400.\n"));
         // MPLL=800, cclk_in=100, 100M/250=400k
-        //MmioAndThenOr32 ((CmuBaseAddr + CLK_DIV_FSYS1_OFFSET), ~(0xFFFF), 0xE008);
         MmioAndThenOr32 ((CmuBaseAddr + CLK_DIV_FSYS1_OFFSET), ~(0xFFFF), 0x1);
         MmioWrite32 ((SdMmcBaseAddr + MSHCI_CLKDIV), 125);        
     }
@@ -351,18 +331,9 @@ UpdateMSHCClkFrequency (
         MmioWrite32 ((SdMmcBaseAddr + MSHCI_CLKDIV), 1);
 
         MSHC_Set_DDR(BUSMODE_DDR);     
-        //MmioWrite32 ((SdMmcBaseAddr + MSHCI_CMD), CMD_ONLY_CLK);
     }
 
-//#if defined(CONFIG_CPU_EXYNOS5250_EVT1) 
   MSHC_clock_onoff(CLK_ENABLE);
-  //MmioOr32 ((SdMmcBaseAddr + CLKCON_OFFSET), ICE);
-
-  //Poll till Internal Clock Stable
-  //while ((MmioRead32 ((SdMmcBaseAddr + CLKCON_OFFSET)) & ICS) != ICS);
-
-  //Set Clock enable to 0x1 to provide the clock to the card
-  //MmioOr32 ((SdMmcBaseAddr + CLKCON_OFFSET), CCE);
 
 }
 
@@ -391,7 +362,6 @@ IN OUT VOID *Buffer, UINTN BlockCount, IN OPERATION_TYPE OperationType
   UINTN i=0;
   UINT32 ByteCnt=0;
   UINT32 BlockCnt=BlockCount;  
-//  UINT32 MSH_uDES_A_0, MSH_uDES_A_1, MSH_uDES_A_2, MSH_uDES_A_3;
   
   SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);
 #if DMA_UNCACHE_ALLOC
@@ -415,7 +385,6 @@ IN OUT VOID *Buffer, UINTN BlockCount, IN OPERATION_TYPE OperationType
             
         // 3. set BLKSIZE
         MmioWrite32 ((SdMmcBaseAddr + MSHCI_BLKSIZ), BLEN_512BYTES);
-        //MmioWrite32 ((SdMmcBaseAddr + MSHCI_BLKSIZ), BLKSIZE_1);
         
          // 4. set BYTCNT
          MmioWrite32 ((SdMmcBaseAddr + MSHCI_BYTCNT), BLEN_512BYTES);
@@ -430,7 +399,6 @@ IN OUT VOID *Buffer, UINTN BlockCount, IN OPERATION_TYPE OperationType
         if(OperationType==WRITE)
         {
            CopyMem((VOID *)(EmmcDMABufferBase+PHY_BUF_OFFSET), (VOID *)Buffer, BlockCount*BLEN_512BYTES);
-           //DEBUG ((EFI_D_INFO, "MSHC_DMA prepare WRITE:%d Block \n", BlockCount)); 
         }
         else
         {
@@ -461,34 +429,6 @@ IN OUT VOID *Buffer, UINTN BlockCount, IN OPERATION_TYPE OperationType
         // interrupt enable   
         MmioWrite32((SdMmcBaseAddr + MSHCI_IDINTEN), (0x337));  
 
-#if 0
-#if 0
-        // set descriptor singlechain
-        des_flag = 0x8000000E;
-        MSH_uDES_A_0 = (EmmcDMABufferBase+0x02F000);
-        MSH_uDES_A_1 = (EmmcDMABufferBase+0x02F004);
-        MSH_uDES_A_2 = (EmmcDMABufferBase+0x02F008);
-        MSH_uDES_A_3 = (EmmcDMABufferBase+0x02F00C);
-        MmioWrite32(MSH_uDES_A_0, 0x8000000E);        
-        MmioWrite32(MSH_uDES_A_1, (ByteCount));            
-        MmioWrite32(MSH_uDES_A_2, (EmmcDMABufferBase+PHY_BUF_OFFSET));            
-        MmioWrite32(MSH_uDES_A_3, MSH_uDES_A_0);   
-#endif         
-
-
-        
-        des_flag = (MSHCI_IDMAC_OWN | MSHCI_IDMAC_FS | MSHCI_IDMAC_DIC | MSHCI_IDMAC_LD);
-        mshci_set_mdma_desc((UINT8 *)pdesc_dmac,
-                                (UINT8 *)pdesc_dmac,
-					des_flag, ByteCount,
-					((UINT32)(EmmcDMABufferBase + PHY_BUF0_OFFSET)));
-
-        MmioWrite32 ((SdMmcBaseAddr + MSHCI_DBADDR), (UINT32)pdesc_dmac);
-
-
-
-#else        
-
     for(i=0; ; i++)
     {
         // set descriptor multichain    
@@ -496,17 +436,15 @@ IN OUT VOID *Buffer, UINTN BlockCount, IN OPERATION_TYPE OperationType
 	des_flag |= (i==0) ? MSHCI_IDMAC_FS:0;
         if(BlockCnt<=8)
         {
-            //DEBUG ((EFI_D_INFO, "DESC LD\n")); 
             des_flag |= (MSHCI_IDMAC_LD);
             mshci_set_mdma_desc((UINT8 *)pdesc_dmac,
-                        //(UINT8 *)pdesc_dmac,
                         (UINT8 *)(EmmcDMABufferBase-sizeof(struct mshci_idmac)),
                         des_flag, BlockCnt*BLEN_512BYTES,
                         ((UINT32)((EmmcDMABufferBase + PHY_BUF_OFFSET)+(UINT32)(i*PHY_BUF_SIZE))));
             break;
 
         }
-        //DEBUG ((EFI_D_INFO, "DESC FS\n")); 
+
         mshci_set_mdma_desc((UINT8 *)pdesc_dmac,
                     (UINT8 *)pdesc_dmac,
                     des_flag, BLEN_512BYTES*8,
@@ -518,8 +456,6 @@ IN OUT VOID *Buffer, UINTN BlockCount, IN OPERATION_TYPE OperationType
     }
 
     MmioWrite32 ((SdMmcBaseAddr + MSHCI_DBADDR), (UINT32)EmmcDMABufferBase);
-
-#endif 
 
         // 3. set BLKSIZE
         MmioWrite32 ((SdMmcBaseAddr + MSHCI_BLKSIZ), BLEN_512BYTES);
@@ -541,10 +477,8 @@ EFI_STATUS MSHC_ReadFIFO(IN UINTN Size32, OUT VOID *Buffer)
     EFI_STATUS Status;
     UINT32 SdMmcBaseAddr;
     UINTN *DataBuffer = Buffer;    
-    UINTN *DataBuffer2_dbg = Buffer; 
     UINTN BufSize=Size32;
     UINTN FifoCount=0;
-    UINTN TotalFifosRead_dbg=0;
     UINTN Count=0;
 
     SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);        
@@ -561,7 +495,6 @@ EFI_STATUS MSHC_ReadFIFO(IN UINTN Size32, OUT VOID *Buffer)
             {
                 FifoCount = BufSize;
             }
-            TotalFifosRead_dbg += FifoCount;
             DEBUG ((EFI_D_INFO, "MSHC::ReadBlock RXDR FIFO:%d\n", FifoCount));            
             for (Count = 0; Count < FifoCount; Count++) 
             {
@@ -580,7 +513,6 @@ EFI_STATUS MSHC_ReadFIFO(IN UINTN Size32, OUT VOID *Buffer)
             {
                 FifoCount = BufSize;
             }
-            TotalFifosRead_dbg += FifoCount;
             DEBUG ((EFI_D_INFO, "MSHC::ReadBlock DTO FIFO:%d\n", FifoCount));            
             for (Count = 0; Count < FifoCount; Count++) 
             {
@@ -632,22 +564,12 @@ EFI_STATUS MSHC_WriteFIFO(IN UINTN Size32, IN VOID *Buffer)
     
 }
 
-/*typedef
-VOID
-CopyMem (
-  IN VOID  *Destination,
-  IN VOID  *Source,
-  IN UINTN Length
-  );*/
-
 EFI_STATUS MSHC_ReadDMA(OUT VOID *Buffer, IN UINTN BlockCount)
 {
     EFI_STATUS Status;
     UINT32 SdMmcBaseAddr;
     UINT32 EmmcDMABufferBase;
     UINTN Count=MAX_RETRY_COUNT;
-    //UINT32 MshcRegValue;
-    //UINT32 TransferSize=0;
 
     SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);   
 #if DMA_UNCACHE_ALLOC
@@ -661,7 +583,6 @@ EFI_STATUS MSHC_ReadDMA(OUT VOID *Buffer, IN UINTN BlockCount)
     {
         if((MmioRead32 (SdMmcBaseAddr + MSHCI_RINTSTS)) & INTMSK_DTO) 
         {
-            //TransferSize = MmioRead32 (SdMmcBaseAddr + MSHCI_TBBCNT);
             CopyMem((VOID *)Buffer, (VOID *)(EmmcDMABufferBase+PHY_BUF_OFFSET), BlockCount*BLEN_512BYTES);
             DEBUG ((EFI_D_INFO, "MSHC_ReadDMA Over %d Blocks\n", BlockCount));                        
             break;
@@ -703,7 +624,6 @@ EFI_STATUS MSHC_WriteDMA(IN VOID *Buffer, IN UINTN BlockCount)
 
     SdMmcBaseAddr = PcdGet32(PcdSdMmcCH0Base);   
     EmmcDMABufferBase = PcdGet32(PcdEmmcDMABufferBase);     
-    //Check controller status to make sure there is no error.
     
     while (Count) 
     {
