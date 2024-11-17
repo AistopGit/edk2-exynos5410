@@ -136,7 +136,7 @@ TimerDriverRegisterHandler (
     return EFI_ALREADY_STARTED;
   }
 
-  DEBUG ((EFI_D_ERROR, "++TimerDriverRegisterHandler\n"));
+  DEBUG ((EFI_D_INFO, "++TimerDriverRegisterHandler\n"));
   mTimerNotifyFunction = NotifyFunction;
 
   return EFI_SUCCESS;

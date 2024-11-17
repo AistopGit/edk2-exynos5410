@@ -35,7 +35,7 @@
   gEXYNOS7885PkgTokenSpaceGuid.PcdEmmcDMABufferBase|0xBFC00000
   gEXYNOS7885PkgTokenSpaceGuid.PcdCmuBase|0x10010000
   gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcCH0Base|0x12200000
-  gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcBase|0x12220000
+  gEXYNOS7885PkgTokenSpaceGuid.PcdSdBase|0x12220000
 
   # GPIO
   gEXYNOS7885PkgTokenSpaceGuid.PcdGpioPart1Base|0x13400000

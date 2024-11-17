@@ -258,7 +258,7 @@
   MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
   MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
-  EXYNOS7885Pkg/AcpiTables/AcpiTables.inf
+  # EXYNOS7885Pkg/AcpiTables/AcpiTables.inf
 
   #
   # SMBIOS Support

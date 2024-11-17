@@ -69,7 +69,7 @@ TimerConstructor (
 	Tmp |= (0x9 << 16);
 	MmioWrite32 ((PWMTimerBase + PWM_TCON_OFFSET), Tmp);
 
-	DEBUG ((EFI_D_ERROR, "Timer 2,3 Enabled\n"));
+	DEBUG ((EFI_D_INFO, "Timer 2,3 Enabled\n"));
 
     return RETURN_SUCCESS;
 }
@@ -120,9 +120,6 @@ MicroSecondDelay (
   do {
     /* Doesn't need to check if timer starts */
     if ((MmioRead32 (PWMTimerBase + PWM_TCNTO2_OFFSET)) != 0)
-      break;
-    /* Supports meaningful delay */
-    if (MicroSeconds < 10000)
       break;
     /* Timer should start Within this time */
     if (i++ > 20)

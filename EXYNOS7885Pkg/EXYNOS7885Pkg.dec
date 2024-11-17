@@ -58,7 +58,7 @@
   # eMMC
   gEXYNOS7885PkgTokenSpaceGuid.PcdCmuBase|0|UINT32|0x00000006
   gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcCH0Base|0|UINT32|0x00000017
-  gEXYNOS7885PkgTokenSpaceGuid.PcdSdMmcBase|0|UINT32|0x0000000e
+  gEXYNOS7885PkgTokenSpaceGuid.PcdSdBase|0|UINT32|0x0000000e
   gEXYNOS7885PkgTokenSpaceGuid.PcdEmmcDMABufferBase|0|UINT32|0x40300000
   
   # GPIO

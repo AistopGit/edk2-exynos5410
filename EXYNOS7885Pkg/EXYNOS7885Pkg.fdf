@@ -184,7 +184,16 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   INF MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
   INF MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
-  INF RuleOverride = ACPITABLE EXYNOS7885Pkg/AcpiTables/AcpiTables.inf
+  # INF RuleOverride = ACPITABLE EXYNOS7885Pkg/AcpiTables/AcpiTables.inf
+
+FILE FREEFORM = 7E374E25-8E01-4FEE-87F2-390C23C606CD {
+# SECTION RAW = EXYNOS7885Pkg/AcpiTables/DBG2.aml
+  SECTION RAW = EXYNOS7885Pkg/AcpiTables/DSDT.aml
+  SECTION RAW = EXYNOS7885Pkg/AcpiTables/FACP.aml
+  SECTION RAW = EXYNOS7885Pkg/AcpiTables/GTDT.aml
+  SECTION RAW = EXYNOS7885Pkg/AcpiTables/MADT.aml
+  SECTION UI = "AcpiTables" 
+}
 
   #
   # SMBIOS Support
