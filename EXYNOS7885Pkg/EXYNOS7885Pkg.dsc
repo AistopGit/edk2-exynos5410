@@ -28,6 +28,9 @@
 
 !include EXYNOS7885Pkg/CommonDsc.dsc.inc
 
+[BuildOptions]
+  *_*_*_CC_FLAGS=-Wno-error
+
 [LibraryClasses]
   RegisterFilterLib|MdePkg/Library/RegisterFilterLibNull/RegisterFilterLibNull.inf
   VariablePolicyHelperLib|MdeModulePkg/Library/VariablePolicyHelperLib/VariablePolicyHelperLib.inf
