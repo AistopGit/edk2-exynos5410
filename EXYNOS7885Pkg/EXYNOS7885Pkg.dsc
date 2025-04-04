@@ -45,6 +45,7 @@
   ArmPlatformLib|EXYNOS7885Pkg/Library/EXYNOS7885PkgLib/EXYNOS7885PkgLib.inf
   ArmMmuLib|EXYNOS7885Pkg/Library/ArmMmuLib/ArmMmuBaseLib.inf
   CompilerIntrinsicsLib|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
+  DmaLib|EmbeddedPkg/Library/CoherentDmaLib/CoherentDmaLib.inf
 
   CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
   UefiBootManagerLib|MdeModulePkg/Library/UefiBootManagerLib/UefiBootManagerLib.inf
@@ -208,6 +209,7 @@
   # GPIO
   #
   EXYNOS7885Pkg/Drivers/Gpio/Gpio.inf
+  EXYNOS7885Pkg/Drivers/GpioI2cDxe/GpioI2cDxe.inf
 
   #
   # Virtual Keyboard
@@ -235,6 +237,13 @@
   # USB Peripheral Support
   #
   EmbeddedPkg/Drivers/AndroidFastbootTransportUsbDxe/FastbootTransportUsbDxe.inf
+
+  #
+  # USB Platform support
+  #
+  EXYNOS7885Pkg/Drivers/PciEmulation/PciEmulation.inf
+  MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
+  MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
 
   #
   # Fastboot

@@ -1,0 +1,32 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = GpioI2cDxe
+  FILE_GUID                      = 145A5498-B94F-49EE-86F4-58CD8C379D29
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+
+  ENTRY_POINT                    = I2C_Test
+
+
+[Sources.common]
+  GpioI2cDxe.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  EXYNOS7885Pkg/EXYNOS7885Pkg.dec
+
+[LibraryClasses]
+  IoLib
+  UefiDriverEntryPoint
+  ExynosGpioLib
+  DebugLib
+
+[Guids]
+
+[Protocols]
+ gSamsungPlatformGpioProtocolGuid
+
+[Pcd]
+
+[depex]
+  TRUE

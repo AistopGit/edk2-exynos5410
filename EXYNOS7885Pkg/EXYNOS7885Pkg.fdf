@@ -128,6 +128,7 @@ READ_LOCK_STATUS   = TRUE
   # GPIO
   #
   INF EXYNOS7885Pkg/Drivers/Gpio/Gpio.inf
+  INF EXYNOS7885Pkg/Drivers/GpioI2cDxe/GpioI2cDxe.inf
 
   #
   # Virtual Keyboard
@@ -155,6 +156,12 @@ READ_LOCK_STATUS   = TRUE
   # USB Peripheral Support
   #
   INF EmbeddedPkg/Drivers/AndroidFastbootTransportUsbDxe/FastbootTransportUsbDxe.inf
+
+  #
+  # USB Platform support
+  #
+  INF EXYNOS7885Pkg/Drivers/PciEmulation/PciEmulation.inf
+  INF MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
 
   #
   # Fastboot
