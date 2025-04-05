@@ -595,7 +595,7 @@
 #define PIN6	(0x06)
 #define PIN7	(0x07)
 
-// 0x1140_0000
+// 0x1340_0000
 #define GPA0	(0x00)
 #define GPA1	(0x01)
 #define GPA2	(0x02)
@@ -604,33 +604,45 @@
 #define GPB2	(0x05)
 #define GPB3	(0x06)
 #define GPC0	(0x07)
-#define GPC1	(0x08)
-#define GPC2	(0x09)
-#define GPC3	(0x0A)
-#define GPD0	(0x0B)
+#define GPC3	(0x08)
+#define GPC1	(0x09)
+#define GPC2	(0x0A)
+#define GPM5	(0x0B)
 #define GPD1	(0x0C)
-#define GPY0	(0x0D)
-#define GPY1	(0x0E)
-#define GPY2	(0x0F)
-#define GPY3	(0x10)
-#define GPY4	(0x11)
-#define GPY5	(0x12)
-#define GPY6	(0x13)
-#define GPX0	(0x60)
-#define GPX1	(0x61)
-#define GPX2	(0x62)
-#define GPX3	(0x63)
+#define GPE0	(0x0D)
+#define GPE1	(0x0E)
+#define GPF0	(0x0F)
+#define GPF1	(0x10)
+#define GPG0	(0x11)
+#define GPG1	(0x12)
+#define GPG2	(0x13)
+#define GPH0	(0x14)
+#define GPH1	(0x15)
+#define GPM7	(0x16)
+#define GPY0	(0x17)
+#define GPY1	(0x18)
+#define GPY2	(0x19)
+#define GPY3	(0x1A)
+#define GPY4	(0x1B)
+#define GPY5	(0x1C)
+#define GPY6	(0x1D)
+#define GPY7	(0x1E)
+// Might be wrong beginning from here
+#define GPX0	(0x1F)
+#define GPX1	(0x20)
+#define GPX2	(0x21)
+#define GPX3	(0x22)
 
-// 0x1340_0000
-#define GPE0	(0x70)
-#define GPE1	(0x71)
-#define GPF0	(0x72)
-#define GPF1	(0x73)
-#define GPG0	(0x74)
-#define GPG1	(0x75)
-#define GPG2	(0x76)
-#define GPH0	(0x77)
-#define GPH1	(0x78)
+// 0x1400_0000
+#define GPJ0	(0x70)
+#define GPJ1	(0x71)
+#define GPJ2	(0x72)
+#define GPJ3	(0x73)
+#define GPJ4	(0x74)
+#define GPK0	(0x75)
+#define GPK1	(0x76)
+#define GPK2	(0x77)
+#define GPK3	(0x78)
 
 // 0x10D1_0000
 #define GPV0	(0x80)
@@ -644,18 +656,18 @@
 // 0x0386_0000
 #define GPZ	(0x90)
 
-#define LCD_BACKLIGHT	GPIO(GPB2,PIN0)
+/*#define LCD_BACKLIGHT	GPIO(GPB2,PIN0)
 #define LCD_RESET		GPIO(GPX1,PIN5)
-#define LCD_POWER		GPIO(GPX3,PIN0)
+#define LCD_POWER		GPIO(GPX3,PIN0)*/
 
 /* SDHC GPIO Pin Configuration for GAIA */
-#define SD_2_EVT1_CLK	GPIO(GPC3,PIN0)
+/*#define SD_2_EVT1_CLK	GPIO(GPC3,PIN0)
 #define SD_2_EVT1_CMD	GPIO(GPC3,PIN1)
 #define SD_2_EVT1_CDn	GPIO(GPC3,PIN2)
 #define SD_2_EVT1_DATA0	GPIO(GPC3,PIN3)
 #define SD_2_EVT1_DATA1	GPIO(GPC3,PIN4)
 #define SD_2_EVT1_DATA2	GPIO(GPC3,PIN5)
-#define SD_2_EVT1_DATA3	GPIO(GPC3,PIN6)
+#define SD_2_EVT1_DATA3	GPIO(GPC3,PIN6)*/
 
 #define SD_2_CLK	GPIO(GPC2,PIN0)
 #define SD_2_CMD	GPIO(GPC2,PIN1)
@@ -669,10 +681,7 @@
 #define SD_2_DATA6      GPIO(GPC3,PIN5)
 #define SD_2_DATA7      GPIO(GPC3,PIN6)
 
-/* USB 2.0 GPIO Pin Configuration for GAIA Evt1 */
-#define USB_2_EVT1 GPIO(GPX2,PIN6)
-
-/* SDHC CH0 GPIO Pin Configuration for GAIA */
+/* SDHC CH0 GPIO Pin Configuration */
 #define SD_0_CLK	GPIO(GPC0,PIN0)
 #define SD_0_CMD	GPIO(GPC0,PIN1)
 #define SD_0_CDn	GPIO(GPC0,PIN2)
@@ -685,8 +694,11 @@
 #define SD_0_DATA6      GPIO(GPC1,PIN2)
 #define SD_0_DATA7      GPIO(GPC1,PIN3)
 
+#define MAX77803_I2C_SCL    GPIO(GPK2, PIN0)
+#define MAX77803_I2C_SDA    GPIO(GPK2, PIN1)
 
-#define CLK_DIV_FSYS1_OFFSET	0x1054C
-#define CLK_DIV_FSYS2_OFFSET	0x10550
+
+/*#define CLK_DIV_FSYS1_OFFSET	0x1054C
+#define CLK_DIV_FSYS2_OFFSET	0x10550*/
 
 #endif

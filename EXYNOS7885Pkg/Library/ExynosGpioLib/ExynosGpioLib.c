@@ -25,7 +25,7 @@ GpioBase (
 
   ASSERT( ((Port >= GPA0) && (Port <= GPY6))
 	   || ((Port >= GPX0) && (Port <= GPX3))
-	   || ((Port >= GPE0) && (Port <= GPH1))
+	   || ((Port >= GPJ0) && (Port <= GPK3))
 	   || ((Port >= GPV0) && (Port <= GPV4))
 	   || (Port == GPZ));
 
@@ -39,11 +39,11 @@ GpioBase (
 	Port -= 0x80; 
 	return (PcdGet32(PcdGpioPart3Base) + (Port*DISTANCE_BTWN_PORTS));
   }else if(Port >= 0x70) {
-	/* 0x1340_0000 */
+	/* 0x1400_0000 */
 	Port -= 0x70; 
 	return (PcdGet32(PcdGpioPart2Base) + (Port*DISTANCE_BTWN_PORTS));
   }else {
-	/* 0x1140_0000 */
+	/* 0x1340_0000 */
 	return (PcdGet32(PcdGpioPart1Base) + (Port*DISTANCE_BTWN_PORTS));
    }
 
