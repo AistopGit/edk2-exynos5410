@@ -22,6 +22,7 @@
   DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
   
   ExynosGpioLib|EXYNOS7885Pkg/Library/ExynosGpioLib/ExynosGpioLib.inf
+  GpioI2cLib|EXYNOS7885Pkg/Library/GpioI2cLib/GpioI2cLib.inf
   BaseLib|MdePkg/Library/BaseLib/BaseLib.inf
   BmpSupportLib|MdeModulePkg/Library/BaseBmpSupportLib/BaseBmpSupportLib.inf
   SafeIntLib|MdePkg/Library/BaseSafeIntLib/BaseSafeIntLib.inf

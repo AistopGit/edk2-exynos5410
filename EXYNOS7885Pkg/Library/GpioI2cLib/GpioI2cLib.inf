@@ -1,0 +1,26 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = GpioI2cLib
+  FILE_GUID                      = 145A5498-B94F-49EE-86F4-58CD8C379D29
+  MODULE_TYPE                    = UEFI_DRIVER
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = GpioI2cLib
+
+[Sources.common]
+  GpioI2c.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  EXYNOS7885Pkg/EXYNOS7885Pkg.dec
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ExynosGpioLib
+  DebugLib
+  TimerLib
+
+[Protocols]
+  gSamsungPlatformGpioProtocolGuid
+
+[Pcd]

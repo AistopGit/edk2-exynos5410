@@ -1,0 +1,34 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = GpioI2cDxe
+  FILE_GUID                      = E9D3A769-BC9F-4790-892D-ACC24FAD1EB1
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+
+  ENTRY_POINT                    = GpioI2cInitialize
+
+
+[Sources.common]
+  GpioI2cDxe.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  EXYNOS7885Pkg/EXYNOS7885Pkg.dec
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  UefiDriverEntryPoint
+  GpioI2cLib
+  DebugLib
+  TimerLib
+
+[Guids]
+
+[Protocols]
+  gGpioI2cProtocolGuid
+
+[Pcd]
+
+[depex]
+  TRUE

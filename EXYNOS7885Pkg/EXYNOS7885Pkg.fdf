@@ -130,6 +130,11 @@ READ_LOCK_STATUS   = TRUE
   INF EXYNOS7885Pkg/Drivers/Gpio/Gpio.inf
 
   #
+  # GPIO I2C
+  #
+  INF EXYNOS7885Pkg/Drivers/GpioI2cDxe/GpioI2cDxe.inf
+
+  #
   # Virtual Keyboard
   #
   INF EmbeddedPkg/Drivers/VirtualKeyboardDxe/VirtualKeyboardDxe.inf

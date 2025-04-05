@@ -210,6 +210,11 @@
   EXYNOS7885Pkg/Drivers/Gpio/Gpio.inf
 
   #
+  # GPIO I2C
+  #
+  EXYNOS7885Pkg/Drivers/GpioI2cDxe/GpioI2cDxe.inf
+
+  #
   # Virtual Keyboard
   #
   EmbeddedPkg/Drivers/VirtualKeyboardDxe/VirtualKeyboardDxe.inf
